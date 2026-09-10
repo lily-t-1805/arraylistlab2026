@@ -3,23 +3,38 @@ import java.awt.event.*;
 import javax.swing.*;
 
 public class Screen extends JFrame implements ActionListener {
-    //instance variables
+    // instance variables
     private MyArrayList<Song> playlist;
     private JTextArea listArea;
     private JLabel messageLabel;
 
-    //user types a new song into here
+    // user types a new song into here
     private JTextField nameField;
     private JTextField artistField;
     private JTextField albumField;
     private JTextField locationField;
 
-    //buttons
+    // fields for deleting a song
+    private JTextField deleteNameField;
+    private JTextField deleteArtistField;
+    private JTextField deleteAlbumField;
+
+    // field for deleting by location
+    private JTextField deleteLocationField;
+
+    // buttons
     private JButton addButton;
     private JButton randomizeButton;
 
+    // partner 2 buttons
+    private JButton sortNameButton;
+    private JButton sortArtistButton;
+    private JButton sortAlbumButton;
+    private JButton deleteLocationButton;
+    private JButton deleteSongButton;
+
     public Screen() {
-        //title
+        // title
         super("My Playlist");
 
         playlist = new MyArrayList<Song>();
@@ -30,26 +45,24 @@ public class Screen extends JFrame implements ActionListener {
         // one column of two rows so the song list gets the top half and the controls get the bottom half
         setLayout(new GridLayout(2, 1));
 
-        //print list here
-        listArea = new JTextArea(14, 40);
+        // print list here
+        listArea = new JTextArea();
         listArea.setEditable(false);
-        JScrollPane scroll = new JScrollPane(listArea);
-        add(scroll);
+        add(new JScrollPane(listArea));
 
-        //user interaction panel
+        // user interaction panel
         add(buildControlPanel());
 
         refreshList();
 
-        setMinimumSize(new Dimension(600, 600));
-        pack();
-        setSize(600, 620);
+        // big enough that every row of controls fits without getting cut off
+        setSize(700, 760);
         setLocationRelativeTo(null);
     }
 
     private JPanel buildControlPanel() {
-        // six rows stacked on top of each other with one row of controls in each
-        JPanel bottom = new JPanel(new GridLayout(6, 1));
+        // nine rows stacked on top of each other with one row of controls in each
+        JPanel bottom = new JPanel(new GridLayout(9, 1));
 
         // partner 1 classwork #3
         // the boxes for adding a song by name artist album and location
@@ -79,7 +92,7 @@ public class Screen extends JFrame implements ActionListener {
         locationRow.add(locationField);
         bottom.add(locationRow);
 
-        // the row of buttons
+        // the row of buttons sits right under the boxes it uses
         JPanel buttonPanel = new JPanel();
 
         addButton = new JButton("add song");
@@ -93,10 +106,62 @@ public class Screen extends JFrame implements ActionListener {
         randomizeButton.addActionListener(this);
         buttonPanel.add(randomizeButton);
 
-        // partner 2 classwork
-        // the sort buttons and the two delete buttons get added right here
-
         bottom.add(buttonPanel);
+
+        // partner 2 classwork #1
+        // the sort buttons
+        JPanel sortPanel = new JPanel();
+
+        sortNameButton = new JButton("sort by name");
+        sortNameButton.addActionListener(this);
+        sortPanel.add(sortNameButton);
+
+        sortArtistButton = new JButton("sort by artist");
+        sortArtistButton.addActionListener(this);
+        sortPanel.add(sortArtistButton);
+
+        sortAlbumButton = new JButton("sort by album");
+        sortAlbumButton.addActionListener(this);
+        sortPanel.add(sortAlbumButton);
+
+        bottom.add(sortPanel);
+
+        // partner 2 classwork #2
+        // the location field and delete button
+        deleteLocationField = new JTextField(10);
+
+        JPanel deleteLocationPanel = new JPanel();
+        deleteLocationPanel.add(new JLabel("delete location:"));
+        deleteLocationPanel.add(deleteLocationField);
+
+        deleteLocationButton = new JButton("delete by location");
+        deleteLocationButton.addActionListener(this);
+        deleteLocationPanel.add(deleteLocationButton);
+
+        bottom.add(deleteLocationPanel);
+
+        // partner 2 classwork #3
+        // the boxes for deleting a song by name artist and album
+        deleteNameField = new JTextField(10);
+        deleteArtistField = new JTextField(10);
+        deleteAlbumField = new JTextField(10);
+
+        JPanel deleteSongPanel = new JPanel();
+
+        deleteSongPanel.add(new JLabel("name:"));
+        deleteSongPanel.add(deleteNameField);
+
+        deleteSongPanel.add(new JLabel("artist:"));
+        deleteSongPanel.add(deleteArtistField);
+
+        deleteSongPanel.add(new JLabel("album:"));
+        deleteSongPanel.add(deleteAlbumField);
+
+        deleteSongButton = new JButton("delete song");
+        deleteSongButton.addActionListener(this);
+        deleteSongPanel.add(deleteSongButton);
+
+        bottom.add(deleteSongPanel);
 
         // the last row is the note that says what just happened
         JPanel messageRow = new JPanel();
@@ -138,10 +203,22 @@ public class Screen extends JFrame implements ActionListener {
 
     // every button on the window ends up here and we figure out which one was clicked
     public void actionPerformed(ActionEvent e) {
-        if (e.getSource() == addButton) {
+        Object source = e.getSource();
+
+        if (source == addButton) {
             addSong();
-        } else if (e.getSource() == randomizeButton) {
+        } else if (source == randomizeButton) {
             randomizeList();
+        } else if (source == sortNameButton) {
+            sortBy("song name");
+        } else if (source == sortArtistButton) {
+            sortBy("artist");
+        } else if (source == sortAlbumButton) {
+            sortBy("album");
+        } else if (source == deleteLocationButton) {
+            deleteByLocation();
+        } else if (source == deleteSongButton) {
+            deleteBySong();
         }
     }
 
@@ -208,12 +285,107 @@ public class Screen extends JFrame implements ActionListener {
         showMessage("the playlist was shuffled.", false);
     }
 
+    // partner 2 classwork #1
+    // sorts the playlist alphabetically by song name, artist, or album using a bubble sort
+    // part says which one to sort by and it also goes into the message at the bottom
+    private void sortBy(String part) {
+        for (int i = 0; i < playlist.size() - 1; i++) {
+            for (int j = 0; j < playlist.size() - 1 - i; j++) {
+                String first = getPart(playlist.get(j), part);
+                String second = getPart(playlist.get(j + 1), part);
+
+                if (first.compareToIgnoreCase(second) > 0) {
+                    playlist.swap(j, j + 1);
+                }
+            }
+        }
+
+        refreshList();
+        showMessage("the playlist was sorted by " + part + ".", false);
+    }
+
+    // partner 2 classwork #1
+    // hands back the artist or the album of a song, and the song name for anything else
+    private String getPart(Song song, String part) {
+        if (part.equals("artist")) {
+            return song.getArtist();
+        } else if (part.equals("album")) {
+            return song.getAlbum();
+        } else {
+            return song.getName();
+        }
+    }
+
+    // partner 2 classwork #2
+    // deletes a song using the number that the user sees on the screen
+    private void deleteByLocation() {
+        String location = deleteLocationField.getText().trim();
+
+        if (location.equals("")) {
+            showMessage("please enter the location of the song to delete.", true);
+            return;
+        }
+
+        int spot = 0;
+        try {
+            spot = Integer.parseInt(location);
+        } catch (NumberFormatException error) {
+            showMessage("the location has to be a whole number.", true);
+            return;
+        }
+
+        // the user enters numbers starting at one
+        if (spot < 1 || spot > playlist.size()) {
+            showMessage("the location has to be between 1 and " + playlist.size() + ".", true);
+            return;
+        }
+
+        // turn the displayed number into an array index
+        Song removed = playlist.remove(spot - 1);
+
+        refreshList();
+        deleteLocationField.setText("");
+        showMessage("removed " + removed + ".", false);
+    }
+
+    // partner 2 classwork #3
+    // deletes a song by name artist and album
+    // this must use the remove(Object) method from MyArrayList
+    private void deleteBySong() {
+        String name = deleteNameField.getText().trim();
+        String artist = deleteArtistField.getText().trim();
+        String album = deleteAlbumField.getText().trim();
+
+        if (name.equals("") || artist.equals("") || album.equals("")) {
+            showMessage("please fill in the song name, artist, and album.", true);
+            return;
+        }
+
+        Song song = new Song(name, artist, album);
+
+        // use remove(Object) as required by the lab
+        if (playlist.remove(song)) {
+            refreshList();
+            clearDeleteFields();
+            showMessage("removed " + song + ".", false);
+        } else {
+            showMessage("that song was not found in the playlist.", true);
+        }
+    }
+
     // empties the four typing boxes after a song goes in
     private void clearFields() {
         nameField.setText("");
         artistField.setText("");
         albumField.setText("");
         locationField.setText("");
+    }
+
+    // empties the boxes used to delete a song
+    private void clearDeleteFields() {
+        deleteNameField.setText("");
+        deleteArtistField.setText("");
+        deleteAlbumField.setText("");
     }
 
     // puts a note at the bottom of the window in red when something went wrong

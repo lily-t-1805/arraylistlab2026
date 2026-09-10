@@ -27,8 +27,10 @@ public class MyArrayList<E> {
 
     //adds the element at a given index
     public void add(int index, E element) {
-        //bounds check
-        check(index);
+        //bounds check, index can equal size because adding there just means the very end
+        if (index < 0 || index > size) {
+            throw new IndexOutOfBoundsException("index " + index + " is not in a list of size " + size);
+        }
 
         //increase array capacity 
         if (size == capacity) {
