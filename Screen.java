@@ -64,106 +64,99 @@ public class Screen extends JFrame implements ActionListener {
         // nine rows stacked on top of each other with one row of controls in each
         JPanel bottom = new JPanel(new GridLayout(9, 1));
 
-        // partner 1 classwork #3
         // the boxes for adding a song by name artist album and location
-        // every row is its own small panel holding a label and the box that goes with it
         nameField = new JTextField(20);
         artistField = new JTextField(20);
         albumField = new JTextField(20);
         locationField = new JTextField(20);
 
         JPanel nameRow = new JPanel();
-        nameRow.add(new JLabel("song name:"));
+        nameRow.add(new JLabel("Song name:"));
         nameRow.add(nameField);
         bottom.add(nameRow);
 
         JPanel artistRow = new JPanel();
-        artistRow.add(new JLabel("artist:"));
+        artistRow.add(new JLabel("Artist:"));
         artistRow.add(artistField);
         bottom.add(artistRow);
 
         JPanel albumRow = new JPanel();
-        albumRow.add(new JLabel("album:"));
+        albumRow.add(new JLabel("Album:"));
         albumRow.add(albumField);
         bottom.add(albumRow);
 
         JPanel locationRow = new JPanel();
-        locationRow.add(new JLabel("location (1 to size plus one):"));
+        locationRow.add(new JLabel("Location:"));
         locationRow.add(locationField);
         bottom.add(locationRow);
 
-        // the row of buttons sits right under the boxes it uses
+        //buttons
         JPanel buttonPanel = new JPanel();
 
-        addButton = new JButton("add song");
-        // the screen itself is the listener so no anonymous class is needed
+        addButton = new JButton("Add song");
         addButton.addActionListener(this);
         buttonPanel.add(addButton);
 
-        // partner 1 classwork #2
         // the button that shuffles the playlist into a random order
-        randomizeButton = new JButton("randomize list");
+        randomizeButton = new JButton("Randomize list");
         randomizeButton.addActionListener(this);
         buttonPanel.add(randomizeButton);
 
         bottom.add(buttonPanel);
 
-        // partner 2 classwork #1
         // the sort buttons
         JPanel sortPanel = new JPanel();
 
-        sortNameButton = new JButton("sort by name");
+        sortNameButton = new JButton("Sort by name");
         sortNameButton.addActionListener(this);
         sortPanel.add(sortNameButton);
 
-        sortArtistButton = new JButton("sort by artist");
+        sortArtistButton = new JButton("Sort by artist");
         sortArtistButton.addActionListener(this);
         sortPanel.add(sortArtistButton);
 
-        sortAlbumButton = new JButton("sort by album");
+        sortAlbumButton = new JButton("Sort by album");
         sortAlbumButton.addActionListener(this);
         sortPanel.add(sortAlbumButton);
 
         bottom.add(sortPanel);
 
-        // partner 2 classwork #2
-        // the location field and delete button
+        //the location field and delete button
         deleteLocationField = new JTextField(10);
 
         JPanel deleteLocationPanel = new JPanel();
-        deleteLocationPanel.add(new JLabel("delete location:"));
+        deleteLocationPanel.add(new JLabel("Delete location:"));
         deleteLocationPanel.add(deleteLocationField);
 
-        deleteLocationButton = new JButton("delete by location");
+        deleteLocationButton = new JButton("Delete by location");
         deleteLocationButton.addActionListener(this);
         deleteLocationPanel.add(deleteLocationButton);
 
         bottom.add(deleteLocationPanel);
 
-        // partner 2 classwork #3
-        // the boxes for deleting a song by name artist and album
+        //the boxes for deleting a song by name artist and album
         deleteNameField = new JTextField(10);
         deleteArtistField = new JTextField(10);
         deleteAlbumField = new JTextField(10);
 
         JPanel deleteSongPanel = new JPanel();
 
-        deleteSongPanel.add(new JLabel("name:"));
+        deleteSongPanel.add(new JLabel("Name:"));
         deleteSongPanel.add(deleteNameField);
 
-        deleteSongPanel.add(new JLabel("artist:"));
+        deleteSongPanel.add(new JLabel("Artist:"));
         deleteSongPanel.add(deleteArtistField);
 
-        deleteSongPanel.add(new JLabel("album:"));
+        deleteSongPanel.add(new JLabel("Album:"));
         deleteSongPanel.add(deleteAlbumField);
 
-        deleteSongButton = new JButton("delete song");
+        deleteSongButton = new JButton("Delete song");
         deleteSongButton.addActionListener(this);
         deleteSongPanel.add(deleteSongButton);
 
         bottom.add(deleteSongPanel);
 
-        // the last row is the note that says what just happened
+        //message to user
         JPanel messageRow = new JPanel();
         messageLabel = new JLabel(" ");
         messageRow.add(messageLabel);
@@ -172,8 +165,7 @@ public class Screen extends JFrame implements ActionListener {
         return bottom;
     }
 
-    // partner 1 classwork #1
-    // the playlist starts out holding these songs before the user touches anything
+    //the playlist starts out holding these songs before the user touches anything
     private void loadStartingSongs() {
         playlist.add(new Song("Bohemian Rhapsody", "Queen", "A Night at the Opera"));
         playlist.add(new Song("Hey Jude", "The Beatles", "Hey Jude"));
@@ -184,110 +176,114 @@ public class Screen extends JFrame implements ActionListener {
         playlist.add(new Song("Smells Like Teen Spirit", "Nirvana", "Nevermind"));
     }
 
-    // partner 1 classwork #1
-    // wipes the text area and prints the list back out in the numbered format the lab wants
-    // the numbers the user sees start at one even though the list itself starts at zero
     private void refreshList() {
-        String text = "";
+        //wipes the text area
+        String text = ""; 
         if (playlist.isEmpty()) {
-            text = "the playlist is empty.";
+            text = "The playlist is empty.";
         } else {
+            //prints the list back out in the numbered format
             for (int i = 0; i < playlist.size(); i++) {
+                //list on screen starts at 1 
                 text = text + (i + 1) + ". " + playlist.get(i) + "\n";
             }
         }
         listArea.setText(text);
-        // scroll back to the top so the user always sees song number one first
+        //scroll back to the top so the user always sees song number one first
         listArea.setCaretPosition(0);
     }
 
-    // every button on the window ends up here and we figure out which one was clicked
+    //button actions
     public void actionPerformed(ActionEvent e) {
         Object source = e.getSource();
-
         if (source == addButton) {
             addSong();
-        } else if (source == randomizeButton) {
+        } 
+        else if (source == randomizeButton) {
             randomizeList();
-        } else if (source == sortNameButton) {
-            sortBy("song name");
-        } else if (source == sortArtistButton) {
-            sortBy("artist");
-        } else if (source == sortAlbumButton) {
-            sortBy("album");
-        } else if (source == deleteLocationButton) {
+        } 
+        else if (source == sortNameButton) {
+            sortBy("Song name");
+        } 
+        else if (source == sortArtistButton) {
+            sortBy("Artist");
+        } 
+        else if (source == sortAlbumButton) {
+            sortBy("Album");
+        } 
+        else if (source == deleteLocationButton) {
             deleteByLocation();
-        } else if (source == deleteSongButton) {
+        } 
+        else if (source == deleteSongButton) {
             deleteBySong();
         }
     }
 
-    // partner 1 classwork #3
-    // reads the four boxes and drops the new song into the spot the user asked for
+    //add a new song
     private void addSong() {
         String name = nameField.getText().trim();
         String artist = artistField.getText().trim();
         String album = albumField.getText().trim();
         String location = locationField.getText().trim();
 
-        // the three song boxes all have to be filled in or there is nothing to add
+        //all 3 boxes have to be filled in 
         if (name.equals("") || artist.equals("") || album.equals("")) {
-            showMessage("please fill in the song name, the artist, and the album.", true);
+            showMessage("Please fill in the song name, the artist, and the album.", true);
             return;
         }
 
         Song song = new Song(name, artist, album);
 
-        // leaving the location blank just means stick it on the end of the list
+        //leaving the location blank just means stick it on the end of the list
         if (location.equals("")) {
             playlist.add(song);
             refreshList();
             clearFields();
-            showMessage("added " + song + " to the end of the list.", false);
+            showMessage("Added " + song + " to the end of the list.", false);
             return;
         }
 
-        // the location has to be a number so we try to read one and complain if we cannot
+        //check location
         int spot = 0;
         try {
-            spot = Integer.parseInt(location);
+            spot = Integer.parseInt(location); //get what the spot is
         } catch (NumberFormatException error) {
-            showMessage("the location has to be a whole number.", true);
+            showMessage("The location has to be a whole number.", true);
             return;
         }
 
-        // the user counts from one so one past the end is size plus one
+        //spot / index out of bounds
         if (spot < 1 || spot > playlist.size() + 1) {
-            showMessage("the location has to be between 1 and " + (playlist.size() + 1) + ".", true);
+            showMessage("The location has to be between 1 and " + (playlist.size() + 1) + ".", true);
             return;
         }
 
-        // take one off of what the user typed to turn it into a real index
+        //add song
         playlist.add(spot - 1, song);
         refreshList();
         clearFields();
-        showMessage("added " + song + " at number " + spot + ".", false);
+        showMessage("Added " + song + " at number " + spot + ".", false);
     }
 
-    // partner 1 classwork #2
-    // shuffles the playlist by walking backwards and trading each song with a random earlier one
+    //shuffles the playlist by walking backwards and trading each song with a random earlier one
     private void randomizeList() {
+        //has to be shuffle-able 
         if (playlist.size() < 2) {
-            showMessage("there are not enough songs to shuffle.", true);
+            showMessage("There are not enough songs to shuffle.", true);
             return;
         }
+
         for (int i = playlist.size() - 1; i > 0; i--) {
-            // pick a random spot from the front of the list through spot i
+            //swap --> pick random pos in the front
             int pick = (int) (Math.random() * (i + 1));
             playlist.swap(i, pick);
         }
+
         refreshList();
-        showMessage("the playlist was shuffled.", false);
+        showMessage("The playlist was shuffled.", false);
     }
 
-    // partner 2 classwork #1
-    // sorts the playlist alphabetically by song name, artist, or album using a bubble sort
-    // part says which one to sort by and it also goes into the message at the bottom
+    //sorts the playlist alphabetically by song name, artist, or album (part) using a bubble sort
     private void sortBy(String part) {
         for (int i = 0; i < playlist.size() - 1; i++) {
             for (int j = 0; j < playlist.size() - 1 - i; j++) {
@@ -301,79 +297,78 @@ public class Screen extends JFrame implements ActionListener {
         }
 
         refreshList();
-        showMessage("the playlist was sorted by " + part + ".", false);
+        showMessage("The playlist was sorted by " + part + ".", false);
     }
 
-    // partner 2 classwork #1
-    // hands back the artist or the album of a song, and the song name for anything else
+    //hands back the artist or the album of a song, and the song name for anything else
     private String getPart(Song song, String part) {
-        if (part.equals("artist")) {
+        if (part.equalsIgnoreCase("artist")) {
             return song.getArtist();
-        } else if (part.equals("album")) {
+        } 
+        else if (part.equalsIgnoreCase("album")) {
             return song.getAlbum();
-        } else {
+        } 
+        else {
             return song.getName();
         }
     }
 
-    // partner 2 classwork #2
-    // deletes a song using the number that the user sees on the screen
+    //deletes a song using location
     private void deleteByLocation() {
         String location = deleteLocationField.getText().trim();
 
+        //empty
         if (location.equals("")) {
-            showMessage("please enter the location of the song to delete.", true);
+            showMessage("Please enter the location of the song to delete.", true);
             return;
         }
 
         int spot = 0;
         try {
-            spot = Integer.parseInt(location);
+            spot = Integer.parseInt(location); //get location
         } catch (NumberFormatException error) {
-            showMessage("the location has to be a whole number.", true);
+            showMessage("The location has to be a whole number.", true);
             return;
         }
 
-        // the user enters numbers starting at one
+        //out of bounds
         if (spot < 1 || spot > playlist.size()) {
-            showMessage("the location has to be between 1 and " + playlist.size() + ".", true);
+            showMessage("The location has to be between 1 and " + playlist.size() + ".", true);
             return;
         }
 
-        // turn the displayed number into an array index
+        //remove song
         Song removed = playlist.remove(spot - 1);
 
         refreshList();
         deleteLocationField.setText("");
-        showMessage("removed " + removed + ".", false);
+        showMessage("Removed " + removed + ".", false);
     }
 
-    // partner 2 classwork #3
-    // deletes a song by name artist and album
-    // this must use the remove(Object) method from MyArrayList
+    //deletes a song by name artist and album
     private void deleteBySong() {
         String name = deleteNameField.getText().trim();
         String artist = deleteArtistField.getText().trim();
         String album = deleteAlbumField.getText().trim();
 
         if (name.equals("") || artist.equals("") || album.equals("")) {
-            showMessage("please fill in the song name, artist, and album.", true);
+            showMessage("Please fill in the song name, artist, and album.", true);
             return;
         }
 
         Song song = new Song(name, artist, album);
 
-        // use remove(Object) as required by the lab
+        //remove
         if (playlist.remove(song)) {
             refreshList();
             clearDeleteFields();
-            showMessage("removed " + song + ".", false);
+            showMessage("Removed " + song + ".", false);
         } else {
-            showMessage("that song was not found in the playlist.", true);
+            showMessage("That song was not found in the playlist.", true);
         }
     }
 
-    // empties the four typing boxes after a song goes in
+    //clears
     private void clearFields() {
         nameField.setText("");
         artistField.setText("");
@@ -381,14 +376,14 @@ public class Screen extends JFrame implements ActionListener {
         locationField.setText("");
     }
 
-    // empties the boxes used to delete a song
+    //empty text boxes
     private void clearDeleteFields() {
         deleteNameField.setText("");
         deleteArtistField.setText("");
         deleteAlbumField.setText("");
     }
 
-    // puts a note at the bottom of the window in red when something went wrong
+    //message --> red if isError = true (just for design)
     private void showMessage(String message, boolean isError) {
         messageLabel.setText(message);
         if (isError) {

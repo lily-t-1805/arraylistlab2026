@@ -38,9 +38,10 @@ public class Song {
     }
 
     //true only when everything matches
-    // deleting a song by typing it in uses this through remove(Object)
+    //deleting a song by typing it in uses this through remove(Object)
     public boolean equals(Object o) {
         Song other = (Song) o;
+        
         if (name.equalsIgnoreCase(other.getName()) && artist.equalsIgnoreCase(other.getArtist()) && album.equalsIgnoreCase(other.getAlbum())) {
             return true;
         } else {
